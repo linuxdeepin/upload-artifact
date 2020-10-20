@@ -47,21 +47,47 @@ async function run(): Promise<void> {
         options.retentionDays = inputs.retentionDays
       }
 
-      const uploadResponse = await artifactClient.uploadArtifact(
-        inputs.artifactName,
-        searchResult.filesToUpload,
-        searchResult.rootDirectory,
-        options
-      )
+      core.info(`AGG single archive is: ${inputs.singleArchive}`)
+      if (inputs.singleArchive === "false") {
+        core.info(`AGG new behavior`)
 
-      if (uploadResponse.failedItems.length > 0) {
-        core.setFailed(
-          `An error was encountered when uploading ${uploadResponse.artifactName}. There were ${uploadResponse.failedItems.length} items that failed to upload.`
-        )
+        for (let fileToUpload of searchResult.filesToUpload) {
+          let uploadName = inputs.artifactName.concat("_".concat(fileToUpload))
+          const uploadResponse = await artifactClient.uploadArtifact(
+            uploadName,
+            [ fileToUpload ],
+            searchResult.rootDirectory,
+            options
+          )
+  
+          if (uploadResponse.failedItems.length > 0) {
+            core.setFailed(
+              `An error was encountered when uploading ${uploadName}. There were ${uploadResponse.failedItems.length} items that failed to upload.`
+            )
+          } else {
+            core.info(
+              `Artifact ${uploadName} has been successfully uploaded!`
+            )
+          }
+        }
       } else {
-        core.info(
-          `Artifact ${uploadResponse.artifactName} has been successfully uploaded!`
+        core.info(`AGG old behavior`)
+        const uploadResponse = await artifactClient.uploadArtifact(
+          inputs.artifactName,
+          searchResult.filesToUpload,
+          searchResult.rootDirectory,
+          options
         )
+
+        if (uploadResponse.failedItems.length > 0) {
+          core.setFailed(
+            `An error was encountered when uploading ${uploadResponse.artifactName}. There were ${uploadResponse.failedItems.length} items that failed to upload.`
+          )
+        } else {
+          core.info(
+            `Artifact ${uploadResponse.artifactName} has been successfully uploaded!`
+          )
+        }
       }
     }
   } catch (err) {

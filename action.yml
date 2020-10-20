@@ -12,7 +12,7 @@ inputs:
     description: >
       Whether or not all files for the action should be combined into a single archive
       or uploaded as separate archives
-    default: false
+    default: 'true'
   if-no-files-found:
     description: >
       The desired behavior if no files are found using the provided path.
