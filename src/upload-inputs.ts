@@ -11,6 +11,8 @@ export interface UploadInputs {
    */
   searchPath: string
 
+  singleArchive: string
+
   /**
    * The desired behavior if no files are found with the provided search path
    */
