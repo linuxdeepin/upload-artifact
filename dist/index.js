@@ -3995,6 +3995,7 @@ function run() {
         try {
             const inputs = input_helper_1.getInputs();
             const searchResult = yield search_1.findFilesToUpload(inputs.searchPath);
+            core.info('AGG inside new code');
             if (searchResult.filesToUpload.length === 0) {
                 // No files were found, different use cases warrant different types of behavior if nothing is found
                 switch (inputs.ifNoFilesFound) {
