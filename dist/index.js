@@ -4027,7 +4027,7 @@ function run() {
                 if (inputs.singleArchive === "false") {
                     core.info(`AGG new behavior`);
                     for (let fileToUpload of searchResult.filesToUpload) {
-                        let uploadName = inputs.artifactName.concat("_".concat(fileToUpload.substring(fileToUpload.lastIndexOf('/' + 1))));
+                        let uploadName = inputs.artifactName.concat("_".concat(fileToUpload.substring(fileToUpload.lastIndexOf('/') + 1)));
                         console.info(`Attempting to upload artifact with name: ${uploadName} at path ${fileToUpload}`);
                         const uploadResponse = yield artifactClient.uploadArtifact(uploadName, [fileToUpload], searchResult.rootDirectory, options);
                         if (uploadResponse.failedItems.length > 0) {
